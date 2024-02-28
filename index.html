@@ -1,0 +1,250 @@
+<!-- Best version so far-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Library Management System</title>
+<style>
+     header {
+        background-color: #B97878;
+        color: #fff;
+        font-family: "Times New Roman", Times, sans-serif;
+        padding: 20px;
+        color: #fff;
+        padding: 0; /* Remove padding */
+        text-align: center;
+        width: 100%; /* Make header span the entire width of the page */
+        position: fixed; /* Fixed position to keep it at the top */
+        top: 0; /* Position at the top */
+        left: 0; /* Position at the left */
+        z-index: 1000;
+        height: 90px; /* Increase the height (depth) */
+        line-height: 80px; /* Center the text vertically within the header */
+        font-size: 40px; 
+    }
+
+    /* Style for header h1 */
+    header h1 {
+        margin: 0;
+        font-size: 50px;
+        font-family: "Times New Roman", Times, sans-serif;
+    }
+
+    #borrowButton {
+        background-color: #742828;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        font-family: "Times New Roman", Times, sans-serif;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin-top: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+     select#bookSelect {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        color: white;
+        background-color: #742828;
+        font-family: "Times New Roman", Times, sans-serif;
+        width: 150px;
+        margin-top: 10px;
+    }
+
+    /* Style for select dropdown options */
+    select#bookSelect option {
+        padding: 10px;
+        font-size: 16px;
+        background-color: #fff;
+        color: #333;
+    }
+      #counter {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        background-color: #B97878;
+        padding: 10px 15px;
+        border: 1px solid #000;
+        color: #fff;
+    }
+    body {
+        font-family: "Times New Roman", Times, sans-serif;
+        display: flex;
+        background-color: #EEDDD2;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin: 20px;
+        font-size: 25px;
+    }
+    .books {
+        width: 30%;
+    }
+    .queues {
+        width: 30%;
+        background-color: #ECC5C0;
+        background-size: contain;
+        padding: 20px;
+    }
+    .book-details {
+        width: 30%;
+        background-color: #ECC5C0;
+        padding: 20px;
+    }
+    .queue-list {
+        list-style-type: none;
+        padding: 0;
+    }
+</style>
+</head>
+<header>
+    <h1>Library Management System</h1>
+</header>
+<body>
+<div id="counter"></div>
+<div class="books">
+  <br><br>
+    <h2>Enter details:</h2>
+    <label for="bookSelect">Book:</label>
+    <select id="bookSelect">
+        <option value="book1">Book 1</option>
+        <option value="book2">Book 2</option>
+        <option value="book3">Book 3</option>
+    </select>
+    <br><br>
+    <label for="readerName">Reader Name:</label>
+    <input type="text" id="readerName">
+    <br><br>
+    <label for="borrowTime">Borrow Time:</label>
+    <input type="number" id="borrowTime">
+    <br><br>
+    <button id="borrowButton" onclick="borrowBook()">Borrow Book</button>
+</div>
+
+<div class="queues">
+  <br><br>
+    <h2>Waiting Queues</h2>
+    <div id="book1Queue" class="queue">
+        <h3>Book 1 Queue</h3>
+        <ul id="queueBook1" class="queue-list"></ul>
+    </div>
+    <div id="book2Queue" class="queue">
+        <h3>Book 2 Queue</h3>
+        <ul id="queueBook2" class="queue-list"></ul>
+    </div>
+    <div id="book3Queue" class="queue">
+        <h3>Book 3 Queue</h3>
+        <ul id="queueBook3" class="queue-list"></ul>
+    </div>
+</div>
+
+<div class="book-details">
+  <br><br>
+    <h2>Book Details</h2>
+    <h3>Book 1: </h3>
+    <p id="bookName"></p>
+    <p id="bookStatusbook1">Book Status: Available</p>
+    <p id="currentReaderbook1"></p>
+    <p id="timerbook1"></p>
+  <br>
+    <h3>Book 2: </h3>
+    <p id="bookName"></p>
+    <p id="bookStatusbook2">Book Status: Available</p>
+    <p id="currentReaderbook2"></p>
+    <p id="timerbook2"></p>
+  <br>
+    <h3>Book 3: </h3>
+    <p id="bookName"></p>
+    <p id="bookStatusbook3">Book Status: Available</p>
+    <p id="currentReaderbook3"></p>
+    <p id="timerbook3"></p>
+</div>
+
+<script>
+    const counter = document.getElementById('counter');
+
+    // Function to update the counter
+    function updateCounter() {
+        let count = 1;
+        const interval = setInterval(() => {
+            counter.textContent = count; // Update the counter content
+            count = (count % 60) + 1; // Loop back to 1 after reaching 60
+        }, 1000); // Update the counter every second
+    }
+
+    // Call the updateCounter function to start the counter
+    updateCounter();
+    const books = {
+        book1: { available: true, queue: [] },
+        book2: { available: true, queue: [] },
+        book3: { available: true, queue: [] }
+    };
+
+    function borrowBook() {
+        const bookSelect = document.getElementById("bookSelect");
+        const selectedBook = bookSelect.value;
+        const readerName = document.getElementById("readerName").value;
+        const borrowTime = parseInt(document.getElementById("borrowTime").value);
+
+        if (books[selectedBook].available) {
+            books[selectedBook].available = false;
+            books[selectedBook].reader = readerName;
+            updateBookDetails(selectedBook);
+            setTimeout(() => returnBook(selectedBook), borrowTime * 1000);
+        } else {
+            books[selectedBook].queue.push({ reader: readerName, borrowTime: borrowTime });
+            updateQueue(selectedBook);
+        }
+    }
+
+    function returnBook(book) {
+        books[book].available = true;
+        const nextReader = books[book].queue.shift();
+        if (nextReader) {
+            books[book].available = false;
+            books[book].reader = nextReader.reader;
+            updateBookDetails(book);
+            setTimeout(() => returnBook(book), nextReader.borrowTime * 1000);
+            updateQueue(book);
+        } else {
+            updateBookDetails(book);
+        }
+    }
+
+    function updateQueue(book) {
+        const queueList = document.getElementById(`queue${book.charAt(0).toUpperCase() + book.slice(1)}`);
+        queueList.innerHTML = "";
+        books[book].queue.forEach(person => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${person.reader} (${person.borrowTime} seconds)`;
+            queueList.appendChild(listItem);
+        });
+    }
+
+    function updateBookDetails(book) 
+    {
+    const bookStatus = document.getElementById(`bookStatus${book}`);
+    const currentReader = document.getElementById(`currentReader${book}`);
+    const timer = document.getElementById(`timer${book}`);
+
+    bookStatus.textContent = books[book].available ? "Book Status: Available" : "Book Status: Occupied";
+    currentReader.textContent = books[book].available ? "" : `Currently Borrowed by: ${books[book].reader}`;
+    if (!books[book].available) {
+        let remainingTime = books[book].queue.length > 0 ? books[book].queue[0].borrowTime : 0;
+        
+    } else 
+    {
+        timer.textContent = "";
+    }
+    }
+
+
+</script>
+</body>
+</html>
