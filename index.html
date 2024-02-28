@@ -220,7 +220,7 @@
         queueList.innerHTML = "";/*sets the inner HTML content of the queueList element to an empty string*/
         books[book].queue.forEach(person => {
             const listItem = document.createElement("li");
-            listItem.textContent = `${person.reader} Time:${person.borrowTime}`;
+            listItem.textContent = `${person.reader}  (Time:${person.borrowTime})`;
             queueList.appendChild(listItem);
         });
     }
