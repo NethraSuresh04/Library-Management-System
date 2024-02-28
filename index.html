@@ -1,4 +1,3 @@
-<!-- Best version so far-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,16 +9,15 @@
         background-color: #B97878;
         color: #fff;
         font-family: "Times New Roman", Times, sans-serif;
-        padding: 20px;
         color: #fff;
-        padding: 0; /* Remove padding */
+        padding: 0; 
         text-align: center;
-        width: 100%; /* Make header span the entire width of the page */
-        position: fixed; /* Fixed position to keep it at the top */
-        top: 0; /* Position at the top */
-        left: 0; /* Position at the left */
-        z-index: 1000;
-        height: 90px; /* Increase the height (depth) */
+        width: 100%;
+        position: fixed; 
+        top: 0;
+        left: 0; 
+        z-index: 1000; /*the element will be positioned above elements with lower z-index values*/
+        height: 90px;
         line-height: 80px; /* Center the text vertically within the header */
         font-size: 40px; 
     }
@@ -39,7 +37,6 @@
         font-family: "Times New Roman", Times, sans-serif;
         text-align: center;
         text-decoration: none;
-        display: inline-block;
         font-size: 16px;
         margin-top: 10px;
         cursor: pointer;
@@ -76,9 +73,9 @@
     }
     body {
         font-family: "Times New Roman", Times, sans-serif;
-        display: flex;
+        display: flex; /*flex container, and its children are laid out along the main axis */
         background-color: #EEDDD2;
-        justify-content: space-between;
+        justify-content: space-between;/*creating equal spacing*/
         align-items: flex-start;
         margin: 20px;
         font-size: 25px;
@@ -180,6 +177,7 @@
 
     // Call the updateCounter function to start the counter
     updateCounter();
+
     const books = {
         book1: { available: true, queue: [] },
         book2: { available: true, queue: [] },
@@ -187,16 +185,16 @@
     };
 
     function borrowBook() {
-        const bookSelect = document.getElementById("bookSelect");
+        const bookSelect = document.getElementById("bookSelect");/*retrieve HTML element book name selected*/
         const selectedBook = bookSelect.value;
-        const readerName = document.getElementById("readerName").value;
-        const borrowTime = parseInt(document.getElementById("borrowTime").value);
+        const readerName = document.getElementById("readerName").value;/*retrieve HTML element reader name*/
+        const borrowTime = parseInt(document.getElementById("borrowTime").value);/*retrieve HTML element borrowed time value as Int*/
 
         if (books[selectedBook].available) {
             books[selectedBook].available = false;
             books[selectedBook].reader = readerName;
             updateBookDetails(selectedBook);
-            setTimeout(() => returnBook(selectedBook), borrowTime * 1000);
+            setTimeout(() => returnBook(selectedBook), borrowTime * 1000);/*execute function after a specified delay in milliseconds*/
         } else {
             books[selectedBook].queue.push({ reader: readerName, borrowTime: borrowTime });
             updateQueue(selectedBook);
@@ -205,7 +203,7 @@
 
     function returnBook(book) {
         books[book].available = true;
-        const nextReader = books[book].queue.shift();
+        const nextReader = books[book].queue.shift();/*removes first element from queue and returns removed element*/
         if (nextReader) {
             books[book].available = false;
             books[book].reader = nextReader.reader;
@@ -219,10 +217,10 @@
 
     function updateQueue(book) {
         const queueList = document.getElementById(`queue${book.charAt(0).toUpperCase() + book.slice(1)}`);
-        queueList.innerHTML = "";
+        queueList.innerHTML = "";/*sets the inner HTML content of the queueList element to an empty string*/
         books[book].queue.forEach(person => {
             const listItem = document.createElement("li");
-            listItem.textContent = `${person.reader} (${person.borrowTime} seconds)`;
+            listItem.textContent = `${person.reader} Time:${person.borrowTime}`;
             queueList.appendChild(listItem);
         });
     }
