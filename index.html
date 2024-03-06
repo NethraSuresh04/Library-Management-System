@@ -179,9 +179,9 @@
     updateCounter();
 
     const books = {
-        book1: { available: true, queue: [] },
-        book2: { available: true, queue: [] },
-        book3: { available: true, queue: [] }
+        book1: { available: 1, queue: [] },
+        book2: { available: 1, queue: [] },
+        book3: { available: 1, queue: [] }
     };
 
     function borrowBook() {
@@ -191,7 +191,7 @@
         const borrowTime = parseInt(document.getElementById("borrowTime").value);/*retrieve HTML element borrowed time value as Int*/
 
         if (books[selectedBook].available) {
-            books[selectedBook].available = false;
+            books[selectedBook].available --;
             books[selectedBook].reader = readerName;
             updateBookDetails(selectedBook);
             setTimeout(() => returnBook(selectedBook), borrowTime * 1000);/*execute function after a specified delay in milliseconds*/
@@ -202,10 +202,10 @@
     }
 
     function returnBook(book) {
-        books[book].available = true;
+        books[book].available ++;
         const nextReader = books[book].queue.shift();/*removes first element from queue and returns removed element*/
         if (nextReader) {
-            books[book].available = false;
+            books[book].available --;
             books[book].reader = nextReader.reader;
             updateBookDetails(book);
             setTimeout(() => returnBook(book), nextReader.borrowTime * 1000);
